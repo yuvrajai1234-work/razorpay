@@ -1,0 +1,24 @@
+# Dataset (large files exceeding GitHub 100MB limit)
+creditcard.csv
+*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Environments & IDEs
+.venv/
+venv/
+env/
+.idea/
+.vscode/
+
+# Testing & Cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
