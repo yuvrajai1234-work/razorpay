@@ -1,0 +1,28 @@
+# --- Backend FastAPI Build ---
+FROM python:3.9-slim
+
+WORKDIR /workspace
+
+# Install system libraries required by reportlab and other packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy dependencies list first to leverage cache
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy ML model artifacts and metrics
+COPY model.joblib .
+COPY scaler.joblib .
+COPY metrics.json .
+
+# Copy application files
+COPY app/ ./app/
+
+# Expose backend port
+EXPOSE 8000
+
+# Run FastAPI app
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
