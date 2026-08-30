@@ -18,59 +18,261 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# TODO: INTEGRATION POINT - Fetch API base URL from production configuration vault or environment variables.
 API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
 
-# Custom CSS for polished fintech aesthetics
+# Custom CSS for polished fintech light-theme aesthetics
 st.markdown(
     """
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    /* ── Global Light Theme Reset ── */
+    html, body, [data-testid="stAppViewContainer"],
+    [data-testid="stApp"], .main, .block-container {
+        background-color: #f8fafc !important;
+        color: #0f172a !important;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    }
+
+    /* ── Header area ── */
+    [data-testid="stHeader"] {
+        background-color: #ffffff !important;
+        border-bottom: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    /* ── Sidebar Light Theme ── */
+    [data-testid="stSidebar"] {
+        background-color: #ffffff !important;
+        border-right: 1px solid #e2e8f0;
+    }
+    [data-testid="stSidebar"] * {
+        color: #0f172a !important;
+    }
+
+    /* ── Main Header ── */
     .main-header {
-        font-size: 2.1rem;
-        font-weight: 800;
-        color: #0f172a;
+        font-size: 2.2rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #3b82f6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         margin-bottom: 0.1rem;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.03em;
+        line-height: 1.2;
     }
     .sub-header {
         font-size: 1.05rem;
-        color: #475569;
+        color: #64748b !important;
         margin-bottom: 1.5rem;
+        font-weight: 500;
     }
+
+    /* ── All text elements ── */
+    h1, h2, h3, h4, h5, h6,
+    .stMarkdown, .stMarkdown p, .stMarkdown li, .stMarkdown span,
+    label, .stTextInput label, .stNumberInput label, .stSelectbox label,
+    .stSlider label, [data-testid="stMetricLabel"],
+    [data-testid="stMetricValue"], [data-testid="stMetricDelta"],
+    .stCaption, p, span, div {
+        color: #0f172a !important;
+    }
+    .stCaption, .stCaption p {
+        color: #64748b !important;
+    }
+
+    /* ── Metric Cards ── */
     .metric-card {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.2rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+        transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .metric-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transform: translateY(-1px);
+    }
+    [data-testid="stMetric"] {
         background: #ffffff;
         border: 1px solid #e2e8f0;
-        border-radius: 10px;
-        padding: 1.1rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
+
+    /* ── Tier Badges ── */
     .tier-badge {
         display: inline-block;
-        padding: 0.25rem 0.75rem;
+        padding: 0.3rem 0.85rem;
         border-radius: 9999px;
         font-weight: 700;
         font-size: 0.85rem;
         text-transform: uppercase;
+        letter-spacing: 0.03em;
     }
-    .tier-critical { background-color: #fee2e2; color: #991b1b; border: 1px solid #f87171; }
-    .tier-high { background-color: #ffedd5; color: #9a3412; border: 1px solid #fb923c; }
-    .tier-medium { background-color: #fef9c3; color: #854d0e; border: 1px solid #facc15; }
-    .tier-low { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+    .tier-critical { background-color: #fee2e2; color: #991b1b !important; border: 1px solid #f87171; }
+    .tier-high { background-color: #ffedd5; color: #9a3412 !important; border: 1px solid #fb923c; }
+    .tier-medium { background-color: #fef9c3; color: #854d0e !important; border: 1px solid #facc15; }
+    .tier-low { background-color: #dcfce7; color: #166534 !important; border: 1px solid #4ade80; }
+
+    /* ── Tabs (fully light) ── */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
+        gap: 4px;
+        background-color: #f1f5f9 !important;
+        border-radius: 12px 12px 0 0;
+        padding: 4px;
     }
     .stTabs [data-baseweb="tab"] {
         height: 48px;
         white-space: pre-wrap;
-        background-color: #f8fafc;
-        border-radius: 8px 8px 0 0;
+        background-color: transparent !important;
+        border-radius: 10px 10px 0 0;
         gap: 6px;
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding: 10px 20px;
         font-weight: 600;
+        color: #475569 !important;
+        border: none !important;
+        transition: all 0.2s ease;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
     }
     .stTabs [aria-selected="true"] {
-        background-color: #ffffff;
-        border-top: 3px solid #2563eb;
+        background-color: #ffffff !important;
+        color: #2563eb !important;
+        border-top: 3px solid #2563eb !important;
+        box-shadow: 0 1px 4px rgba(37,99,235,0.08);
+    }
+    .stTabs [data-baseweb="tab-panel"] {
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0;
+        border-top: none;
+        border-radius: 0 0 12px 12px;
+        padding: 1.5rem;
+    }
+
+    /* ── Text Inputs & Number Inputs ── */
+    .stTextInput > div > div > input,
+    .stNumberInput > div > div > input {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        font-family: 'Inter', sans-serif !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .stTextInput > div > div > input:focus,
+    .stNumberInput > div > div > input:focus {
+        border-color: #2563eb !important;
+        box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important;
+    }
+
+    /* ── Select Box ── */
+    .stSelectbox > div > div {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+    }
+    .stSelectbox [data-baseweb="select"] * {
+        color: #0f172a !important;
+    }
+
+    /* ── Sliders ── */
+    .stSlider > div > div > div > div {
+        color: #0f172a !important;
+    }
+    .stSlider [data-baseweb="slider"] [data-testid="stThumbValue"] {
+        color: #0f172a !important;
+    }
+
+    /* ── Buttons ── */
+    .stButton > button[kind="primary"],
+    .stButton > button[data-testid="stBaseButton-primary"] {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 10px !important;
+        font-weight: 700 !important;
+        padding: 0.65rem 1.5rem !important;
+        font-family: 'Inter', sans-serif !important;
+        box-shadow: 0 2px 8px rgba(37,99,235,0.25) !important;
+        transition: all 0.2s ease !important;
+    }
+    .stButton > button[kind="primary"]:hover,
+    .stButton > button[data-testid="stBaseButton-primary"]:hover {
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+        box-shadow: 0 4px 16px rgba(37,99,235,0.35) !important;
+        transform: translateY(-1px) !important;
+    }
+
+    /* ── Dataframes ── */
+    [data-testid="stDataFrame"], .stDataFrame {
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        overflow: hidden;
+    }
+
+    /* ── Download Button ── */
+    .stDownloadButton > button {
+        background-color: #ffffff !important;
+        color: #2563eb !important;
+        border: 2px solid #2563eb !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        transition: all 0.2s ease !important;
+    }
+    .stDownloadButton > button:hover {
+        background-color: #2563eb !important;
+        color: #ffffff !important;
+    }
+
+    /* ── Info / Success / Warning / Error Boxes ── */
+    .stAlert, [data-testid="stAlert"] {
+        border-radius: 10px !important;
+    }
+
+    /* ── Expander ── */
+    .streamlit-expanderHeader {
+        background-color: #f8fafc !important;
+        color: #0f172a !important;
+        border-radius: 8px;
+    }
+
+    /* ── Horizontal Rules ── */
+    hr {
+        border-color: #e2e8f0 !important;
+    }
+
+    /* ── Scrollbar Styling ── */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
+    /* ── Number input buttons ── */
+    .stNumberInput button {
+        background-color: #f1f5f9 !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+    }
+    .stNumberInput button:hover {
+        background-color: #e2e8f0 !important;
     }
     </style>
     """,
@@ -236,11 +438,11 @@ with tab1:
                     go.Indicator(
                         mode="gauge+number",
                         value=prob_pct,
-                        domain={"x": [0, 1], "y": [0, 1]},
+                        domain={"x": [0.05, 0.95], "y": [0.05, 0.9]},
                         title={"text": "Fraud Probability (%)", "font": {"size": 16, "color": "#0f172a"}},
-                        number={"suffix": "%", "font": {"size": 28, "color": "#0f172a"}},
+                        number={"suffix": "%", "font": {"size": 32, "color": "#0f172a"}},
                         gauge={
-                            "axis": {"range": [0, 100], "tickwidth": 1, "tickcolor": "#94a3b8"},
+                            "axis": {"range": [0, 100], "tickwidth": 1, "tickcolor": "#94a3b8", "tickfont": {"size": 12, "color": "#64748b"}},
                             "bar": {"color": "#0f172a", "thickness": 0.25},
                             "bgcolor": "white",
                             "borderwidth": 2,
@@ -259,7 +461,7 @@ with tab1:
                         },
                     )
                 )
-                fig_gauge.update_layout(height=240, margin=dict(l=20, r=20, t=30, b=20))
+                fig_gauge.update_layout(height=300, margin=dict(l=40, r=40, t=50, b=10), paper_bgcolor="#ffffff", plot_bgcolor="#ffffff", font=dict(color="#0f172a"))
                 st.plotly_chart(fig_gauge, use_container_width=True)
 
             with col_res2:
@@ -301,7 +503,7 @@ with tab1:
                     title="Top 3 Feature Attributions (SHAP TreeExplainer)",
                     labels={"shap_value": "SHAP Risk Contribution (+ = Higher Risk, - = Lower Risk)", "display_label": "Feature"},
                 )
-                fig_shap.update_layout(height=230, margin=dict(l=20, r=20, t=40, b=20))
+                fig_shap.update_layout(height=230, margin=dict(l=20, r=20, t=40, b=20), paper_bgcolor="#ffffff", plot_bgcolor="#ffffff", font=dict(color="#0f172a"))
                 st.plotly_chart(fig_shap, use_container_width=True)
 
                 col_d1, col_d2, col_d3 = st.columns(3)
@@ -328,6 +530,7 @@ with tab2:
     st.markdown("### 📑 Dispute Representment Queue & Automated PDF Generator")
     st.caption("Manage incoming chargebacks, compile EMV 3DS, carrier tracking, and authorization audit trails into automated Visa/Mastercard rebuttal packets.")
 
+    # TODO: INTEGRATION POINT - Replace synthetic mock list with a query fetching active dispute cases from database or gateway webhooks (e.g. Razorpay, Stripe).
     # Synthetic mock dispute data
     mock_disputes = [
         {
@@ -439,6 +642,7 @@ with tab2:
 
     if gen_btn or f"pdf_bytes_{selected_disp_id}" in st.session_state:
         if gen_btn:
+            # TODO: INTEGRATION POINT - Populate IP address, device fingerprints, AVS results, carrier shipping/delivery details, and authorization/gateway parameters dynamically by calling payment processor and logistics partner APIs.
             pdf_payload = {
                 "dispute_id": selected_dispute["dispute_id"],
                 "order_id": selected_dispute["order_id"],
@@ -614,5 +818,5 @@ with tab3:
             color="mean_abs_shap",
             color_continuous_scale="Blues",
         )
-        fig_gshap.update_layout(yaxis=dict(autorange="reversed"), height=350, margin=dict(l=20, r=20, t=40, b=20))
+        fig_gshap.update_layout(yaxis=dict(autorange="reversed"), height=350, margin=dict(l=20, r=20, t=40, b=20), paper_bgcolor="#ffffff", plot_bgcolor="#ffffff", font=dict(color="#0f172a"))
         st.plotly_chart(fig_gshap, use_container_width=True)

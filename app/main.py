@@ -45,6 +45,7 @@ def get_ml_resources() -> Dict[str, Any]:
     """Lazy/cached loader for ML resources."""
     global _ml_resources
     if not _ml_resources:
+        # TODO: INTEGRATION POINT - For distributed production, pull model weights, scalers, and performance metrics from an artifact registry or model store (e.g. AWS S3, GCS, or MLflow) with auto-reload capabilities.
         model_path = "model.joblib"
         scaler_path = "scaler.joblib"
         metrics_path = "metrics.json"
@@ -139,6 +140,7 @@ async def score_order(txn: TransactionRequest):
     Evaluates transaction fraud risk using XGBClassifier with scale_pos_weight.
     Returns fraud probability, risk tier, recommended decision action, and top 3 SHAP feature drivers.
     """
+    # TODO: INTEGRATION POINT - Log incoming transaction, predicted scores, and inference latency to a secure data stream or monitoring service (e.g. Kafka, Elasticsearch, or Datadog) to track model drift and business metrics.
     resources = get_ml_resources()
     if not resources:
         raise HTTPException(
@@ -237,6 +239,7 @@ async def generate_evidence(dispute: DisputeEvidenceRequest):
     Returns binary PDF stream ready for direct download or acquirer submission.
     """
     try:
+        # TODO: INTEGRATION POINT - Log the dispute case generation request, and backup the generated binary PDF stream to secure persistent object storage (e.g. AWS S3) for transaction/audit logging.
         pdf_bytes = generate_dispute_pdf(dispute)
         filename = f"rebuttal_{dispute.dispute_id}_{dispute.order_id}.pdf"
 
