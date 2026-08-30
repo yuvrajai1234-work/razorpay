@@ -10,6 +10,30 @@ import shap
 from fastapi import FastAPI, HTTPException, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 
+# Python 3.9 Pydantic JSON Schema compatibility patch for nested Literals
+try:
+    import pydantic.json_schema as _pydantic_js
+    from typing_inspection.introspection import get_literal_values as _get_literal_vals
+
+    def _safe_build_schema_type_to_method(self):
+        mapping = {}
+        def _extract_strings(tp):
+            if isinstance(tp, str):
+                yield tp
+            else:
+                for sub in _get_literal_vals(tp):
+                    yield from _extract_strings(sub)
+
+        for key in _extract_strings(_pydantic_js.CoreSchemaOrFieldType):
+            method_name = f"{key.replace('-', '_')}_schema"
+            if hasattr(self, method_name):
+                mapping[key] = getattr(self, method_name)
+        return mapping
+
+    _pydantic_js.GenerateJsonSchema.build_schema_type_to_method = _safe_build_schema_type_to_method
+except Exception:
+    pass
+
 from app.pdf_generator import generate_dispute_pdf
 from app.schemas import DisputeEvidenceRequest, ScoreResponse, SHAPDriver, TransactionRequest
 
