@@ -264,7 +264,7 @@ tests/test_api.py::test_generate_evidence_pdf_success PASSED             [100%]
 ```
 
 ---
+#10 Deployments
 
-## 📜 10. License
-
-Developed for the **RazorPay Hackathon (Track 02: Risk Mitigation & Dispute Resolution)**. Distributed under the MIT License.
+Frontend:https://razorpay-frontend-119x.onrender.com/
+Backend:https://razorpay-backend-wvbl.onrender.com
